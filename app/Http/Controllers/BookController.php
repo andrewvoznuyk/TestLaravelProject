@@ -5,14 +5,10 @@ namespace App\Http\Controllers;
 use App\Entities\Author;
 use App\Entities\Book;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
 use Illuminate\Http\Request;
-
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use function Symfony\Component\Translation\t;
 
 class BookController extends Controller
 {
@@ -26,15 +22,22 @@ class BookController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): JsonResponse
+    public function index(int $page = 1, int $limit = 10): JsonResponse
     {
+        $repository = $this->entityManager->getRepository(Book::class);
+        $totalBooks = $repository->count([]);
+        $offset = ($page - 1) * $limit;
 
-        $books = $this->entityManager->getRepository(Book::class)->findAll();
+        $books = $repository->findBy([], null, $limit, $offset);
 
-        $jsonBook = $this->serializer->serialize($books, 'json');
+        $jsonBooks = $this->serializer->serialize($books, 'json');
 
-
-        return new JsonResponse($jsonBook, Response::HTTP_OK, [], true);
+        return new JsonResponse([
+            'total' => $totalBooks,
+            'page' => $page,
+            'limit' => $limit,
+            'books' => $jsonBooks
+        ], Response::HTTP_OK);
     }
 
     /**

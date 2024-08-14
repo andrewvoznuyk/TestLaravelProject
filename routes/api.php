@@ -19,6 +19,6 @@ Route::prefix('authors')->group(function () {
 Route::prefix('books')->group(function () {
     Route::post('/', [BookController::class, 'store']);
     Route::delete('/{book}', [BookController::class, 'destroy']);
-    Route::get('/', [BookController::class, 'index']);
+        Route::get('/{page}/{limit}', [BookController::class, 'index']);
     Route::get('/{book}', [BookController::class, 'show']);
 });

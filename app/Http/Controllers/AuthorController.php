@@ -6,7 +6,6 @@ use App\Entities\Author;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Matching\ValidatorInterface;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
